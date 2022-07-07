@@ -102,7 +102,9 @@ template <typename PointT>
 class PCDBuffer
 {
   public:
-    PCDBuffer () {}
+    PCDBuffer () = default;
+    PCDBuffer (const PCDBuffer&) = delete; // Disabled copy constructor
+    PCDBuffer& operator = (const PCDBuffer&) = delete; // Disabled assignment operator
 
     bool 
     pushBack (typename PointCloud<PointT>::ConstPtr); // thread-save wrapper for push_back() method of ciruclar_buffer
@@ -145,9 +147,6 @@ class PCDBuffer
     }
 
   private:
-    PCDBuffer (const PCDBuffer&) = delete; // Disabled copy constructor
-    PCDBuffer& operator = (const PCDBuffer&) = delete; // Disabled assignment operator
-
     std::mutex bmutex_;
     std::condition_variable buff_empty_;
     boost::circular_buffer<typename PointCloud<PointT>::ConstPtr> buffer_;

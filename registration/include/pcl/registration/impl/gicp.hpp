@@ -506,6 +506,13 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::computeTransformatio
       break;
     }
     nr_iterations_++;
+
+    if (update_visualizer_ != nullptr) {
+      PointCloudSourcePtr input_transformed(new PointCloudSource);
+      pcl::transformPointCloud(output, *input_transformed, transformation_);
+      update_visualizer_(*input_transformed, source_indices, *target_, target_indices);
+    }
+
     // Check for convergence
     if (nr_iterations_ >= max_iterations_ || delta < 1) {
       converged_ = true;
@@ -522,6 +529,26 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::computeTransformatio
                 getClassName().c_str());
   }
   final_transformation_ = previous_transformation_ * guess;
+
+  PCL_DEBUG("Transformation "
+            "is:\n\t%5f\t%5f\t%5f\t%5f\n\t%5f\t%5f\t%5f\t%5f\n\t%5f\t%5f\t%5f\t%5f\n\t%"
+            "5f\t%5f\t%5f\t%5f\n",
+            final_transformation_(0, 0),
+            final_transformation_(0, 1),
+            final_transformation_(0, 2),
+            final_transformation_(0, 3),
+            final_transformation_(1, 0),
+            final_transformation_(1, 1),
+            final_transformation_(1, 2),
+            final_transformation_(1, 3),
+            final_transformation_(2, 0),
+            final_transformation_(2, 1),
+            final_transformation_(2, 2),
+            final_transformation_(2, 3),
+            final_transformation_(3, 0),
+            final_transformation_(3, 1),
+            final_transformation_(3, 2),
+            final_transformation_(3, 3));
 
   // Transform the point cloud
   pcl::transformPointCloud(*input_, output, final_transformation_);

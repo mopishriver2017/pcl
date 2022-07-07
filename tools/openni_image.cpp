@@ -165,7 +165,9 @@ struct Frame
 class Buffer
 {
 	public:
-    Buffer () {}
+    Buffer () = default;
+    Buffer (const Buffer&) = delete;            // Disabled copy constructor
+    Buffer& operator =(const Buffer&) = delete; // Disabled assignment operator
 
     bool 
     pushBack (Frame::ConstPtr frame)
@@ -245,9 +247,6 @@ class Buffer
     }
 
 	private:
-		Buffer (const Buffer&) = delete;            // Disabled copy constructor
-		Buffer& operator =(const Buffer&) = delete; // Disabled assignment operator
-		
     std::mutex bmutex_;
 		std::condition_variable buff_empty_;
 		boost::circular_buffer<Frame::ConstPtr> buffer_;

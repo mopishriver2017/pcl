@@ -181,7 +181,7 @@ public:
   operator=(IterativeClosestPoint&&) = delete;
 
   /** \brief Empty destructor */
-  ~IterativeClosestPoint() {}
+  ~IterativeClosestPoint() override = default;
 
   /** \brief Returns a pointer to the DefaultConvergenceCriteria used by the
    * IterativeClosestPoint class. This allows to check the convergence state after the
@@ -232,7 +232,7 @@ public:
   }
 
   /** \brief Provide a pointer to the input target
-   * (e.g., the point cloud that we want to align to the target)
+   * (e.g., the point cloud that we want to align the input source to)
    *
    * \param[in] cloud the input point cloud target
    */
@@ -353,9 +353,10 @@ public:
   using IterativeClosestPoint<PointSource, PointTarget, Scalar>::
       correspondence_rejectors_;
 
-  using Ptr = shared_ptr<IterativeClosestPoint<PointSource, PointTarget, Scalar>>;
-  using ConstPtr =
-      shared_ptr<const IterativeClosestPoint<PointSource, PointTarget, Scalar>>;
+  using Ptr =
+      shared_ptr<IterativeClosestPointWithNormals<PointSource, PointTarget, Scalar>>;
+  using ConstPtr = shared_ptr<
+      const IterativeClosestPointWithNormals<PointSource, PointTarget, Scalar>>;
 
   /** \brief Empty constructor. */
   IterativeClosestPointWithNormals()
@@ -367,7 +368,7 @@ public:
   };
 
   /** \brief Empty destructor */
-  virtual ~IterativeClosestPointWithNormals() {}
+  virtual ~IterativeClosestPointWithNormals() = default;
 
   /** \brief Set whether to use a symmetric objective function or not
    *
